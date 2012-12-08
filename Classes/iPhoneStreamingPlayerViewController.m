@@ -56,7 +56,7 @@
     if((WeekdayNumber > 0 && WeekdayNumber < 6) && (CurrentHour > 8 && CurrentHour < 19))
     {
         //if time valid, 1. turn the clock font white for feedback
-        clockLabel.textColor = [UIColor whiteColor];
+        userOverride = false;
         
         if (!photohandler.running)
         {
@@ -64,16 +64,22 @@
         }
         
         //is the luminosity valid?
-        if(photohandler.luminosity > 0.3 && ![streamer isPlaying] && !userOverride)
+        if(photohandler.luminosity > 0.3 && ![streamer isPlaying])
         {
+            clockLabel.textColor = [UIColor blackColor];
+            self.view.backgroundColor = [UIColor whiteColor];
+            
             [downloadSourceField resignFirstResponder];
             
             [self createStreamer];
             [self setButtonImageNamed:@"loadingbutton.png"];
             [streamer start];
         }
-        else if(photohandler.luminosity < 0.3 && [streamer isPlaying] && !userOverride)
+        else if(photohandler.luminosity < 0.3 && [streamer isPlaying])
         {
+            clockLabel.textColor = [UIColor whiteColor];
+            self.view.backgroundColor = [UIColor blackColor];
+            
             [streamer stop];
         }
     }
@@ -87,7 +93,8 @@
         }
         
         //1. turn the clock font red for feedback
-        clockLabel.textColor = [UIColor redColor];
+        clockLabel.textColor = [UIColor darkGrayColor];
+        self.view.backgroundColor = [UIColor blackColor];
         
         //2. Is the radio still running and loud? then turn it down
         if([streamer isPlaying] && !userOverride)
